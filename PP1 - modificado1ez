@@ -1,0 +1,136 @@
+create database ITCR;
+use ITCR;
+
+create schema ati;
+
+-- Creacion de las tablas 
+
+create table ati.examen(
+numPrueba int NOT NULL,
+fechaAplic date NOT NULL,
+valorPorcentual int NOT NULL,
+tiempo time NOT NULL,
+puntosTotales int NOT NULL,
+indicacionesGen varchar(50) NOT NULL,
+idTipoPrueba int NOT NULL,
+codigoCurso int NOT NULL,
+PRIMARY KEY (numPrueba),
+FOREIGN KEY (idTipoPrueba) REFERENCES tipoPruebas(idTipoPrueba)
+);
+
+create table ati.tipoPruebas(
+	idTipoPrueba int NOT NULL,
+	tipos varchar(12),
+    PRIMARY KEY (idTipoPrueba)
+);
+
+create table ati.periodo(
+	numPeriodo int NOT NULL,
+	año year NOT NULL,
+    idTipoPeriodo int NOT NULL,
+    PRIMARY KEY (numPeriodo),
+    FOREIGN KEY (idTipoPeriodo) REFERENCES tipoPeriodo(idTipoPeriodo),
+    UNIQUE KEY año_Unique(año),
+    UNIQUE KEY idTipoPeriodo_Unique(idTipoPeriodo)
+);
+
+create table ati.tipoPeriodo(
+	idTipoPeriodo int NOT NULL,
+	tipos varchar(12),
+    PRIMARY KEY (idTipoPeriodo)
+);
+
+create table ati.curso(
+numPeriodo int NOT NULL,
+codigo date NOT NULL,
+nombre varchar(25) NOT NULL,
+año year NOT NULL,
+idTipoPeriodo int NOT NULL,
+PRIMARY KEY (codigo),
+FOREIGN KEY (numPeriodo) REFERENCES periodo(numPeriodo),
+FOREIGN KEY (idTipoPeriodo) REFERENCES tipoPeriodo(idTipoPeriodo),
+UNIQUE KEY codigo_Unique(codigo)
+);
+
+create table ati.seccion(
+idSeccion int NOT NULL,
+valorSeccion int NOT NULL,
+indicaciones varchar(25) NOT NULL,
+idTipoSeccion int NOT NULL,
+numPrueba int NOT NULL,
+PRIMARY KEY (idSeccion),
+FOREIGN KEY (idTipoSeccion) REFERENCES tipoSeccion(idTipoSeccion),
+FOREIGN KEY (numPrueba) REFERENCES examen(numPrueba)
+);
+
+create table ati.tipoSeccion(
+idTipoSeccion int NOT NULL,
+tipos varchar(25),
+PRIMARY KEY (idTipoSeccion)
+);
+
+create table ati.seleccionUnica(
+idItem int NOT NULL,
+idSeccion int NOT NULL,
+enunciado varchar(25) NOT NULL,
+respCorrecta varchar(25) NOT NULL,
+valorItem int NOT NULL,
+PRIMARY KEY (idItem),
+FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion),
+FOREIGN KEY (respCorrecta) REFERENCES respuestas_SeleccionU(respuestas)
+);
+
+create table ati.respuestas_SeleccionU(
+idPosiblesResp int NOT NULL,
+respuestas varchar(25),
+idItem int NOT NULL,
+PRIMARY KEY (idPosiblesResp),
+FOREIGN KEY (idItem) REFERENCES seleccionUnica(idItem)
+);
+
+create table ati.pareo(
+idItem int NOT NULL,
+idSeccion int NOT NULL,
+descripcion varchar(25) NOT NULL,
+respuestaAsociada varchar(25) NOT NULL,
+valorItem int NOT NULL,
+PRIMARY KEY (idItem),
+FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion)
+);
+
+create table ati.desarrollo(
+idItem int NOT NULL,
+idSeccion int NOT NULL,
+enunciado varchar(25) NOT NULL,
+respuesta varchar(25) NOT NULL,
+valorItem int NOT NULL,
+PRIMARY KEY (idItem),
+FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion)
+);
+
+create table ati.falsoVerdadero(
+idItem int NOT NULL,
+idSeccion int NOT NULL,
+enunciado varchar(25) NOT NULL,
+respLogica varchar(25) NOT NULL,
+valorItem int NOT NULL,
+PRIMARY KEY (idItem),
+FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion)
+);
+
+create table ati.respuestaCorta(
+idItem int NOT NULL,
+idSeccion int NOT NULL,
+enunciado varchar(25) NOT NULL,
+valorItem int NOT NULL,
+PRIMARY KEY (idItem),
+FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion)
+);
+
+create table ati.respuestas_RespCorta(
+idRespRequeridas int NOT NULL,
+idItem int NOT NULL,
+respuestas varchar(25) NOT NULL,
+PRIMARY KEY (idRespRequeridas),
+FOREIGN KEY (idItem) REFERENCES respuestaCorta(idItem)
+);
