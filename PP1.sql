@@ -6,7 +6,7 @@ create schema ati;
 -- Creacion de las tablas 
 
 create table ati.examen(
-numPrueba int NOT NULL,
+numPrueba int NOT NULL AUTO_INCREMENT,
 fechaAplic date NOT NULL,
 valorPorcentual int NOT NULL,
 tiempo time NOT NULL,
@@ -15,8 +15,8 @@ indicacionesGen varchar(50) NOT NULL,
 idTipoPrueba int NOT NULL,
 codigoCurso int NOT NULL,
 PRIMARY KEY (numPrueba),
-FOREIGN KEY (idTipoPrueba) REFERENCES tipoPruebas(idTipoPrueba) ,
-UNIQUE KEY idFinca_Unique(idFinca)
+FOREIGN KEY (idTipoPrueba) REFERENCES tipoPruebas(idTipoPrueba),
+FOREIGN KEY (codigoCurso) REFERENCES curso(codigo) 
 );
 
 create table ati.tipoPruebas(
@@ -31,19 +31,18 @@ create table ati.periodo(
     idTipoPeriodo int NOT NULL,
     PRIMARY KEY (numPeriodo),
     FOREIGN KEY (idTipoPeriodo) REFERENCES tipoPeriodo(idTipoPeriodo),
-    UNIQUE KEY año_Unique(año),
-    UNIQUE KEY idTipoPeriodo_Unique(idTipoPeriodo)
+    UNIQUE KEY año_Unique(año)
 );
 
 create table ati.tipoPeriodo(
-	idTipoPeriodo int NOT NULL,
+	idTipoPeriodo int NOT NULL AUTO_INCREMENT,
 	tipos varchar(12),
     PRIMARY KEY (idTipoPeriodo)
 );
 
 create table ati.curso(
 numPeriodo int NOT NULL,
-codigo date NOT NULL,
+codigo int NOT NULL,
 nombre varchar(25) NOT NULL,
 año year NOT NULL,
 idTipoPeriodo int NOT NULL,
@@ -77,15 +76,14 @@ enunciado varchar(25) NOT NULL,
 respCorrecta varchar(25) NOT NULL,
 valorItem int NOT NULL,
 PRIMARY KEY (idItem),
-FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion),
-FOREIGN KEY (respCorrecta) REFERENCES respuestas_SeleccionU(respCorrecta)
+FOREIGN KEY (idSeccion) REFERENCES seccion(idSeccion)
 );
 
 create table ati.respuestas_SeleccionU(
 idPosiblesResp int NOT NULL,
 respuestas varchar(25),
 idItem int NOT NULL,
-PRIMARY KEY (idTipoSeccion),
+PRIMARY KEY (idPosiblesResp),
 FOREIGN KEY (idItem) REFERENCES seleccionUnica(idItem)
 );
 
